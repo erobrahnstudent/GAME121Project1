@@ -1,0 +1,12 @@
+- Add UI elements (ammo counts, weapons, cooldown since sound is a no-go)
+- probably could have some sound though? might play with BFXR or something, mash something together.
+- music, definitely. Some mixing. We have the technology.
+- perhaps different levels?
+
+
+if it seems like i'm over-achieving with this, it's because i've done alllll this before, but not nearly as neatly
+think one of my earlier projects in Game Design WAS a first-person shooter just like this.
+Faceplanted with the projectiles back then, but I have a handle on it now.
+so yeah, still working on this
+might take it and make a more-impressive game out of it for a portfolio piece after the project deadline
+w/e
