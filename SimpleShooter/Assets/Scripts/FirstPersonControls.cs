@@ -7,7 +7,7 @@ public class FirstPersonControls : MonoBehaviour {
     public float sensitivityX = 10.0f;
 
 	void Start () {
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 	}
 	
@@ -31,6 +31,9 @@ public class FirstPersonControls : MonoBehaviour {
         }
         transform.position += moveDirection.normalized * speed * Time.deltaTime;
 
-        transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivityX, 0);
+        if (Input.GetAxis("Mouse X") > 0.002f || Input.GetAxis("Mouse X") < 0.002f)
+        {
+            transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivityX, 0);
+        }
     }
 }

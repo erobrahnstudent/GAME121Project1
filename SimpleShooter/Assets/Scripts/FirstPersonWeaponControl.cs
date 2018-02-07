@@ -4,16 +4,22 @@ using UnityEngine;
 // Author: Edward Robrahn
 public class FirstPersonWeaponControl : MonoBehaviour {
     int weapon = 0; // 0: Pistol, 1: Shotgun, 2: Rifle
+    public bool[] hasWeapon = { true, false, false };
     public int[] ammo = { 25, 0, 0 };
     public int[] damage = { 10, 7, 50 };
     public float[] cooldowns = { 0.75f, 1f, 1.5f, 0.25f };
     public float[] speeds = { 500f, 400f, 600f };
+    public float[] spreadsize = { 0f, 1.0f, 0f };
+    public int[] projectiles = { 1, 6, 1 };
+    // probably break all that out into an entire weapon class?
     public Material[] weaponmats;
     public Renderer standin;
-    float currentCooldown;
-    public bool[] hasWeapon = { true, false, false };
+    public float currentCooldown;
     public GameObject barrel;
     public GameObject shot;
+    Quaternion rotation;
+
+    float width; float height;
 	void Start () {
 		
 	}
@@ -26,30 +32,24 @@ public class FirstPersonWeaponControl : MonoBehaviour {
         }
 		if (Input.GetMouseButton(0))
         {
-            if (weapon == 0 && ammo[0] > 0 && currentCooldown <= 0)
+            if (ammo[weapon] > 0 && currentCooldown <= 0)
             {
-                GameObject bullet = Instantiate(shot, barrel.transform.position, barrel.transform.rotation);
-                bullet.GetComponent<ProjectileBehavior>().transferDamage = damage[0];
-                bullet.GetComponent<ProjectileBehavior>().speed = speeds[0];
-                currentCooldown = cooldowns[0];
-                --ammo[0];
-            }
-            if (weapon == 1 && ammo[1] > 0 && currentCooldown <= 0)
-            {
-                // TODO: Multiple bullets + cone spread
-                GameObject bullet = Instantiate(shot, barrel.transform.position, barrel.transform.rotation);
-                bullet.GetComponent<ProjectileBehavior>().transferDamage = damage[1];
-                bullet.GetComponent<ProjectileBehavior>().speed = speeds[1];
-                currentCooldown = cooldowns[1];
-                --ammo[1];
-            }
-            if (weapon == 2 && ammo[2] > 0 && currentCooldown <= 0)
-            {
-                GameObject bullet = Instantiate(shot, barrel.transform.position, barrel.transform.rotation);
-                bullet.GetComponent<ProjectileBehavior>().transferDamage = damage[2];
-                bullet.GetComponent<ProjectileBehavior>().speed = speeds[2];
-                currentCooldown = cooldowns[2];
-                --ammo[2];
+                for (int fired = 0; fired < projectiles[weapon]; fired++)
+                {
+                    if (spreadsize[weapon] > 0)
+                    {
+                        float xSpread = Random.Range(-1f, 1f);
+                        float ySpread = Random.Range(-1f, 1f);
+                        Vector3 spread = new Vector3(xSpread, ySpread, 0.0f).normalized * spreadsize[weapon];
+                        rotation = Quaternion.Euler(spread) * barrel.transform.rotation;
+                    }
+                    else rotation = barrel.transform.rotation;
+                    GameObject bullet = Instantiate(shot, barrel.transform.position, rotation);
+                    bullet.GetComponent<ProjectileBehavior>().initializeProjectile(damage[weapon]);
+                    bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * speeds[weapon]);
+                }
+                currentCooldown = cooldowns[weapon];
+                --ammo[weapon];
             }
         }
 
@@ -80,5 +80,15 @@ public class FirstPersonWeaponControl : MonoBehaviour {
                 standin.material = weaponmats[2];
             }
         }
+    }
+
+    public void giveAmmo(int weapon, int amount)
+    {
+        ammo[weapon] += amount;
+    }
+    public void giveWeapon(int weapon, int ammo)
+    {
+        if (!hasWeapon[weapon]) hasWeapon[weapon] = true;
+        giveAmmo(weapon, ammo);
     }
 }

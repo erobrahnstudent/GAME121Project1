@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 // Author: Edward Robrahn
 public class ProjectileBehavior : MonoBehaviour {
-    public float speed;
     public float timeout;
     public int transferDamage;
     float currentTime;
 
     private void Start()
     {
-        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
     }
     void Update () {
         currentTime += Time.deltaTime;
@@ -27,5 +25,10 @@ public class ProjectileBehavior : MonoBehaviour {
             collision.gameObject.GetComponent<TargetBehavior>().TakeDamage(transferDamage);
         }
         Destroy(gameObject);
+    }
+
+    public void initializeProjectile(int indamage)
+    {
+        transferDamage = indamage;
     }
 }

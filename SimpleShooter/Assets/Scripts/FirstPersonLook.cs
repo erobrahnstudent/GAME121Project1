@@ -32,6 +32,5 @@ public class FirstPersonLook : MonoBehaviour {
             currentRotation = 0.0f;
         }
         transform.Rotate(Vector3.right, currentRotation);
-        //TODO: Change this so that we check a rotation delta first before rotation is applied and make sure it's within our bounds
     }
 }
