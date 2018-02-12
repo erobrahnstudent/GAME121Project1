@@ -1,0 +1,6 @@
+SimpleShooter/Library/
+SimpleShooter/Temp/
+*.csproj
+*.sln
+*.json
+SimpleShooter/.vs/
