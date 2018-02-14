@@ -55,7 +55,7 @@ public class FirstPersonWeaponControl : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (weapon != 0 && hasWeapon[0])
+            if (weapon != 0 && hasWeapon[0] && currentCooldown <= 0)
             {
                 weapon = 0;
                 currentCooldown = cooldowns[3];
@@ -64,14 +64,14 @@ public class FirstPersonWeaponControl : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (weapon != 1 && hasWeapon[1])
+            if (weapon != 1 && hasWeapon[1] && currentCooldown <= 0)
             {
                 weapon = 1;
                 currentCooldown = cooldowns[3];
                 standin.material = weaponmats[1];
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3) && currentCooldown <= 0)
         {
             if (weapon != 2 && hasWeapon[2])
             {
