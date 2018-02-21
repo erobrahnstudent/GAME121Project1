@@ -327,6 +327,7 @@ GameObject:
   - component: {fileID: 110488062}
   - component: {fileID: 110488063}
   - component: {fileID: 110488064}
+  - component: {fileID: 110488065}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -414,7 +415,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  airspeed: 5
   sensitivityX: 10
+  gravity: 0.25
+  groundedgrav: 0.75
+  playerController: {fileID: 110488065}
+  jumpSpeed: 2
+  velocityDecay: 5
 --- !u!54 &110488063
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -442,6 +449,23 @@ CapsuleCollider:
   m_Radius: 1
   m_Height: 2.2
   m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!143 &110488065
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 110488057}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &124876515
 GameObject:
