@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 // Author: Edward Robrahn
 public class FirstPersonWeaponControl : MonoBehaviour {
-    int weapon = 0; // 0: Pistol, 1: Shotgun, 2: Rifle
+    public int weapon { get; set; } // 0: Pistol, 1: Shotgun, 2: Rifle
     public bool[] hasWeapon = { true, false, false };
     public int[] ammo = { 25, 0, 0 };
     public int[] damage = { 10, 7, 50 };

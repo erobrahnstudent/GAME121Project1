@@ -15,6 +15,7 @@ public class UIBehavior : MonoBehaviour
     public Text cooldownText;
     public GameObject rotatingcam;
     public GameObject ammocounters;
+    public MusicControl mus;
 
     public GameObject[] counters;
     public Text[] countertext;
@@ -58,6 +59,7 @@ public class UIBehavior : MonoBehaviour
         camf.enabled = false;
         caml.enabled = false;
         rotatingcam.SetActive(true);
+        mus.victory();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
