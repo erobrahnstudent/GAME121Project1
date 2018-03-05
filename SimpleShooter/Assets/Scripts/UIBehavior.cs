@@ -46,7 +46,7 @@ public class UIBehavior : MonoBehaviour
         }
     }
 
-    public void StopPlaying()
+    public void StopPlaying(bool condition)
     {
         playing = false;
         ammocounters.SetActive(false);
@@ -59,7 +59,8 @@ public class UIBehavior : MonoBehaviour
         camf.enabled = false;
         caml.enabled = false;
         rotatingcam.SetActive(true);
-        mus.victory();
+        if (condition == true) mus.victory();
+        else mus.stop();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }

@@ -12,7 +12,7 @@ public class FirstPersonHealthControl : MonoBehaviour {
         else return true;
     }
 
-    public void Damage(int x)
+    public void Damage(float x)
     {
         Health -= x;
         if (Health < 0)
@@ -20,7 +20,7 @@ public class FirstPersonHealthControl : MonoBehaviour {
             die();
         }
     }
-    public void Heal(int x)
+    public void Heal(float x)
     {
         Health += x;
         if (Health > MaxHealth)
@@ -31,6 +31,8 @@ public class FirstPersonHealthControl : MonoBehaviour {
 
     void die()
     {
-
+        this.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        FindObjectOfType<UIBehavior>().StopPlaying(false);
+        this.enabled = false;
     }
 }

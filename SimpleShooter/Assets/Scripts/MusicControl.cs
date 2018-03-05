@@ -14,11 +14,10 @@ public class MusicControl : MonoBehaviour {
         mas.clip = Action;
         mas.Play();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void stop()
+    {
+        mas.Stop();
+    }
 
     public void victory()
     {

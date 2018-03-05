@@ -8,6 +8,9 @@ public class WeaponSoundController : MonoBehaviour {
     AudioSource aud;
     FirstPersonWeaponControl wc;
     MasterSoundControl master;
+
+    bool cooldown = false;
+    float cdt;
 	// Use this for initialization
 	void Start () {
         wc = gameObject.GetComponent<FirstPersonWeaponControl>();
@@ -18,10 +21,20 @@ public class WeaponSoundController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (cooldown)
+        {
+            cdt -= Time.deltaTime;
+            if (cdt <= 0)
+            {
+                cooldown = false;
+            }
+        }
         aud.clip = WACL[wc.weapon];
-        if (Input.GetMouseButtonDown(0) && wc.currentCooldown <= 0.01 && wc.ammo[0] > 0)
+        if (Input.GetMouseButton(0) && wc.ammo[wc.weapon] > 0 && cooldown == false)
         {
             aud.Play();
+            cdt = wc.cooldowns[wc.weapon];
+            cooldown = true;
         }
 	}
 }

@@ -9,7 +9,7 @@ public class finalpickupBehavior : MonoBehaviour {
         if (coll.gameObject.tag == "Player")
         {
             print("Stopping...");
-            ui.StopPlaying();
+            ui.StopPlaying(true);
             Destroy(this.gameObject);
         }
     }
