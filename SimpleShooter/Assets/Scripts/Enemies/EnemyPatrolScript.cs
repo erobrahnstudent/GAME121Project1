@@ -7,6 +7,8 @@ public class EnemyPatrolScript : MonoBehaviour {
     int patrolPointTarget = 0;
     public float satisfactoryBounds = 1f;
 
+    public Vector3 getFirst() { return patrolroute[0].position; }
+
     public Vector3 NextWaypoint()
     {
         if (patrolPointTarget >= patrolroute.Length - 1)

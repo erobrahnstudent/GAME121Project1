@@ -6,6 +6,11 @@ public class FirstPersonHealthControl : MonoBehaviour {
     public float MaxHealth;
     public float Health {get; set;}
 
+    private void Start()
+    {
+        Health = MaxHealth;
+    }
+
     public bool healthCheck()
     {
         if (Health >= MaxHealth - 0.001) return false;

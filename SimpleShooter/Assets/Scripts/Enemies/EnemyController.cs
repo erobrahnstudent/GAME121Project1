@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[RequireComponent(typeof(CharacterController), typeof(EnemyPatrolScript))]
+// Author: Edward "Screaming loudly into the yawning abyss" Robrahn
+[RequireComponent (typeof(EnemyPatrolScript))]
 public class EnemyController : MonoBehaviour {
     [SerializeField]
     float noticeRadius = 10.0f;
@@ -24,11 +24,16 @@ public class EnemyController : MonoBehaviour {
     float Damage;
 
     [SerializeField]
+    float Velocity;
+
+    [SerializeField]
     float rotateSpeed = 30f;
 
     public GameObject enemyProjectile;
+    public Transform firePoint;
     RaycastHit noticeRay;
 
+    [SerializeField]
     int state = 0; // 0 = idle/patrolling, 1 = searching, 2 = attacking
     float noticeTimer = 5.0f; // Controls when the enemy will go back to patrolling
     float currentTimer = 0.0f;
@@ -42,16 +47,16 @@ public class EnemyController : MonoBehaviour {
     Vector3 destination;
     Vector3 savedest;
     GameObject player;
-    CharacterController cont;
     Animator ani;
+
 	void Start () {
         player = FindObjectOfType<FirstPersonControls>().gameObject;
         pat = gameObject.GetComponent<EnemyPatrolScript>();
-        cont = gameObject.GetComponent<CharacterController>();
+        ani = gameObject.GetComponent<Animator>();
+        destination = pat.getFirst();
 	}
 	
 	void Update () {
-        if (moving) ani.SetBool("isMoving", true);
         if (fireTimerStarted) currentFireTimer += Time.deltaTime;
         if (timerStarted) currentTimer += Time.deltaTime;
         if (state == 0)
@@ -73,9 +78,13 @@ public class EnemyController : MonoBehaviour {
                 }
             }
 
-            cont.Move(destination * speed * Time.deltaTime);
+            Vector3 direction = destination - transform.position;
+            direction = direction.normalized;
+            direction.y = 0;
+            transform.position += direction * speed * Time.deltaTime;
             Vector3 rotateVector = Vector3.RotateTowards(transform.forward, destination, rotateSpeed * Time.deltaTime, 0.0f);
-            cont.transform.rotation = Quaternion.LookRotation(rotateVector);
+            rotateVector.y = 0;
+            transform.rotation = Quaternion.LookRotation(rotateVector);
         }
         else if (state == 1)
         {
@@ -85,6 +94,7 @@ public class EnemyController : MonoBehaviour {
                 {
                     playerInSight = true;
                     LastKnownPos = player.transform.position;
+                    destination = player.transform.position;
                     if (Vector3.Distance(this.transform.position, player.transform.position) <= attackRadius)
                     {
                         state = 2;
@@ -96,11 +106,12 @@ public class EnemyController : MonoBehaviour {
                 if (!playerInSight)
                 {
                     destination = LastKnownPos;
+                    timerStarted = true;
                 }
                 else
                 {
                     destination = player.transform.position;
-
+                    timerStarted = false;
                 }
             }
             else
@@ -109,18 +120,23 @@ public class EnemyController : MonoBehaviour {
                 if (currentTimer >= noticeTimer)
                 {
                     state = 0;
+                    destination = savedest;
                 }
             }
             if (moving)
             {
-                cont.Move(destination * speed * Time.deltaTime);
-                Vector3 rotateVector = Vector3.RotateTowards(transform.forward, destination, rotateSpeed * Time.deltaTime, 0.0f);
-                cont.transform.rotation = Quaternion.LookRotation(rotateVector);
+                Vector3 direction = destination - transform.position;
+                direction = direction.normalized;
+                direction.y = 0;
+                transform.position += direction * speed * Time.deltaTime;
+                Vector3 rotateVector = Vector3.RotateTowards(transform.forward, direction, rotateSpeed * Time.deltaTime, 0.0f);
+                transform.rotation = Quaternion.LookRotation(rotateVector);
             }
             else if (noticeRay.collider.gameObject.tag == "Player")
             {
                 Vector3 rotateVector = Vector3.RotateTowards(transform.forward, player.transform.position, rotateSpeed * Time.deltaTime, 0.0f);
-                cont.transform.rotation = Quaternion.LookRotation(rotateVector);
+                rotateVector.y = 0;
+                transform.rotation = Quaternion.LookRotation(rotateVector);
             }
             
         }
@@ -131,38 +147,47 @@ public class EnemyController : MonoBehaviour {
                 if (noticeRay.collider.gameObject.tag == "Player")
                 {
                     playerInSight = true;
+                    currentFireTimer += Time.deltaTime;
                     if (currentFireTimer >= SecondsBetweenFiring)
                     {
-                        // put firing code here
+                        GameObject proj = Instantiate(enemyProjectile, firePoint.position, firePoint.rotation);
+                        proj.GetComponent<EnemyProjectileController>().init(Damage);
+                        proj.GetComponent<Rigidbody>().AddForce(firePoint.transform.forward * Velocity);
+                        ani.SetTrigger("isAttacking");
+                        currentFireTimer = 0;
                     }
                 }
+                else playerInSight = false;
             }
             if (Vector3.Distance(this.transform.position, player.transform.position) >= attackRadius)
             {
-                state = 0;
+                state = 1;
                 moving = true;
             }
             if (Vector3.Distance(this.transform.position, player.transform.position) <= stopRadius)
             {
                 moving = false;
             }
-            else
-            {
-                moving = true;
-            }
             if (moving)
             {
-                cont.Move(destination * speed * Time.deltaTime);
+                Vector3 direction = destination - transform.position;
+                direction = direction.normalized;
+                direction.y = 0;
+                transform.position += direction * speed * Time.deltaTime;
                 Vector3 rotateVector = Vector3.RotateTowards(transform.forward, destination, rotateSpeed * Time.deltaTime, 0.0f);
-                cont.transform.rotation = Quaternion.LookRotation(rotateVector);
+                rotateVector.y = 0;
+                transform.rotation = Quaternion.LookRotation(rotateVector);
             }
-            else if (noticeRay.collider.gameObject.tag == "Player")
+            else if (playerInSight)
             {
                 Vector3 rotateVector = Vector3.RotateTowards(transform.forward, player.transform.position, rotateSpeed * Time.deltaTime, 0.0f);
-                cont.transform.rotation = Quaternion.LookRotation(rotateVector);
+                rotateVector.y = 0;
+                transform.rotation = Quaternion.LookRotation(rotateVector);
             }
         }
-	}
+        if (moving) ani.SetBool("isMoving", true);
+        else ani.SetBool("isMoving", false);
+    }
 
     public void TakeDamage(float dmg)
     {

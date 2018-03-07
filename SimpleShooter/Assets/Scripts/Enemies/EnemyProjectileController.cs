@@ -2,24 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyProjectileController : MonoBehaviour {
+public class EnemyProjectileController : MonoBehaviour
+{
     float Damage = 0.0f;
-    float Velocity = 5.0f;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        this.gameObject.transform.Translate(Vector3.forward * Velocity * Time.deltaTime);
-	}
+    public float timeout;
+    float currentTime;
+    // Use this for initialization
+    void Start()
+    {
 
-    public void init(float damage, float velocity, Quaternion rotation)
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        currentTime += Time.deltaTime;
+        if (currentTime > timeout)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void init(float damage)
     {
         Damage = damage;
-        Velocity = velocity;
-        transform.rotation = rotation;
     }
 
     private void OnCollisionEnter(Collision collision)

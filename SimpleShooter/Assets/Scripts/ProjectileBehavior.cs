@@ -24,9 +24,9 @@ public class ProjectileBehavior : MonoBehaviour {
         {
             collision.gameObject.GetComponent<TargetBehavior>().TakeDamage(transferDamage);
         }
-        if (GetComponentInParent<EnemyController>() != null)
+        if (collision.gameObject.GetComponent<EnemyController>() != null)
         {
-            GetComponentInParent<EnemyController>().TakeDamage((float)transferDamage);
+            collision.gameObject.GetComponent<EnemyController>().TakeDamage(transferDamage);
         }
         Destroy(gameObject);
     }

@@ -16,6 +16,7 @@ public class UIBehavior : MonoBehaviour
     public GameObject rotatingcam;
     public GameObject ammocounters;
     public MusicControl mus;
+    public Text healthText;
 
     public GameObject[] counters;
     public Text[] countertext;
@@ -43,6 +44,7 @@ public class UIBehavior : MonoBehaviour
                 }
             }
             cooldownText.text = control.currentCooldown.ToString();
+            healthText.text = walk.gameObject.GetComponent<FirstPersonHealthControl>().Health.ToString();
         }
     }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitTargetSount : MonoBehaviour {
+public class HitTargetSound : MonoBehaviour {
     AudioSource aud;
     public AudioClip audc;
     
@@ -12,11 +12,12 @@ public class HitTargetSount : MonoBehaviour {
         aud.clip = audc;
 	}
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.gameObject.tag == "Projectile")
+        if (collision.gameObject.tag == "Projectile")
         {
             aud.Play();
         }
     }
+
 }
